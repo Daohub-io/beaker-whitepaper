@@ -33,20 +33,20 @@ organizations must be extensible upfront to allow changes and upgrades to such
 protocols and still maintain high standards of safety.
 
 Beaker is a minimal open-source exokernel protocol that serves as a building
-block for establishing secure and scalable organizationorganisations. Beaker
+block for establishing secure and scalable organizations. Beaker
 enables organizations that will grow in complexity and will require long term
 extensibility.
 
-Using Beaker, users can establish an organizationorganisation on the blockchain
+Using Beaker, users can establish an organization on the blockchain
 with a much higher level of confidence in it's stability and security. The
 safety model Beaker provides not only reduces risk, but allows
-organizationorganisations to be designed in a much more flexible and robust
+organizations to be designed in a much more flexible and robust
 manner.
 
-The exokernel model of Beaker allows organizationorganisations to freely define
+The exokernel model of Beaker allows organizations to freely define
 their own systems and procedures, but within a safe and controlled environment.
 The Beaker kernel provides the building blocks and primitives that
-organizationorganisations need to build more nuanced governance models to suit
+organizations need to build more nuanced governance models to suit
 their use case. Most critically, by using the primitives Beaker provides,
 designers of these systems will then be able to demonstrate these security
 guarantees to others without requiring manual-code verification.
@@ -408,7 +408,7 @@ complex as the procedures themselves.
 
 Therefore, a policy mechanism must have two critical criteria:
 
-1. It must be simple to read and analyzeanalyse separately from the code it
+1. It must be simple to read and analyze separately from the code it
    applies to.
 2. It must be able to represent the guarantees about a system (i.e. the
    restrictions) that users wish to make.
@@ -429,7 +429,7 @@ or higher level "system designer" might require control over what the various
 contracts in the system can do. This would allow them to compartmentalise areas
 of code and ensure that it only has the privileges it requires, allowing them to
 focus attention on more critical high-risk code. Even if another member of the
-organizationorganisation updates a contract under his or her control, the system
+organization updates a contract under his or her control, the system
 designer should be able to limit the potential damage of an error or malign
 action by sandboxing that contract.
 
