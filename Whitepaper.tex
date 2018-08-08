@@ -23,6 +23,7 @@
             pdfborder={0 0 0}}
 \urlstyle{same}  % don't use monospace font for urls
 \usepackage{color}
+\usepackage{listings}
 \usepackage{fancyvrb}
 \newcommand{\VerbBar}{|}
 \newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
@@ -338,17 +339,21 @@ and output parameters of the system call are set prior to these
 instructions, and are the responsibility of the designer of the contract
 (presumably with significant assistance from libraries).
 
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{CALLER         }\CommentTok{// Get Caller}
-\NormalTok{DUP            }\CommentTok{// Duplicate to Stack}
-\NormalTok{EQ             }\CommentTok{// Check if Caller is Kernel Instance}
-\NormalTok{NOT            }\CommentTok{// If not..}
-\NormalTok{PUSH erraddr   }\CommentTok{// Throw “Wrong Address” error}
-\NormalTok{JUMPI          }\CommentTok{// Otherwise..}
-\NormalTok{DELEGATECALL   }\CommentTok{// Delegate Call to Caller}
-\end{Highlighting}
-\end{Shaded}
+
+
+
+\definecolor{mygreen}{rgb}{0,0.6,0}
+\begin{minipage}{\linewidth}
+\begin{lstlisting}[language=c,commentstyle=\color{mygreen},basicstyle=\ttfamily,identifierstyle=\color{blue},caption=Sequence of steps to perform a system call.]
+CALLER         // Get Caller
+DUP            // Duplicate to Stack
+EQ             // Check if Caller is Kernel Instance
+NOT            // If not..
+PUSH erraddr   // Throw "Wrong Address" error
+JUMPI          // Otherwise..
+DELEGATECALL   // Delegate Call to Caller
+\end{lstlisting}
+\end{minipage}
 
 These instructions ensure that the contract is only calling to the
 original kernel instance and nothing more. Because this sequence of
@@ -373,7 +378,7 @@ performed during instantiation).
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=1\textwidth]{media/SystemCalls.pdf}
+\includegraphics[width=0.8\textwidth]{media/SystemCalls.pdf}
 \caption{This diagram illustrates the general sequence of steps
 done when a procedure executes a system call}
 \end{figure}
