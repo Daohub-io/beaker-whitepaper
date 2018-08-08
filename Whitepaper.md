@@ -1,5 +1,7 @@
 # BeakerOS: A security protocol and framework for smart contracts
 
+Authors:
+
 * Jacob Payne
 * Jake O’Shannessy
 * Aleksey Troitskiy
