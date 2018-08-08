@@ -96,7 +96,7 @@ the ZEP protocol are able to vouch or vote for upgrades they wish to adopt..
 Only code that is sufficiently vouched for by the users is included in the
 system, with the developers working on that code being rewarded in
 cryptocurrency assets. The vouching system ensures that only code that has been
-approved by all the relevant users is included andallocates monetary rewards to
+approved by all the relevant users is included and allocates monetary rewards to
 incentivize high quality development work.
 
 Unfortunately, this solution only solves a governance problem, which does not
@@ -297,7 +297,7 @@ table.*
 4. Once deployed, the procedure is added to the procedure table and assigned a
    list of designated capabilities.
 
-###  Entry Procedure
+### Entry Procedure
 
 We have established that a Beaker kernel instance has to accept two types of
 transactions:
@@ -440,8 +440,8 @@ such a way that they can be checked using fewer resources and less knowledge.
 As an example: in the Linux kernel, the permission bit mask and owner on a
 user's personal file allows them to quickly and easily see (by listing the
 properties of their files with ls -l) that only they, and anybody with root
-access can access their files. The simple string presented by ls -l of
--rw-r----- bob users file.txt instantly tells bob that (with the exception of
+access can access their files. The simple string presented by `ls -l of
+-rw-r----- bob users file.txt` instantly tells bob that (with the exception of
 root) only he can modify file.txt, while other users in the group users can also
 read it, but nobody else has access. This short simple string forms the policy
 placed on that file. It’s simplicity means that the restrictions placed on that
@@ -492,7 +492,7 @@ designs this does have a few limitations. One limitation it does not support
 dynamically chosen capabilities. For example this means that it is not possible
 to pass a capability of a particular storage location to a procedure. This is an
 often touted feature of capability systems that allows for the delegation of
-authority. The advantage of eschewing such a feature is that it makes tha
+authority. The advantage of eschewing such a feature is that it makes the
 capabilities more static and auditable.
 
 ### Custom User Permissions
@@ -569,7 +569,7 @@ so will not be a limiting factor long term.
 
 #### Events
 
-Events are crucial for signaling verified changes to the outside world,
+Events are crucial for signalling verified changes to the outside world,
 accessing data asynchronously, as well as their use in establishing off-chain
 networks. In Ethereum, logs can be ascribed from 0-4 topics, with each topic
 being a 32-byte value. These topics are handled as addresses or namespaces. In
