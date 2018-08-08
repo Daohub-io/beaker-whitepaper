@@ -439,14 +439,14 @@ such a way that they can be checked using fewer resources and less knowledge.
 
 As an example: in the Linux kernel, the permission bit mask and owner on a
 user's personal file allows them to quickly and easily see (by listing the
-properties of their files with ls -l) that only they, and anybody with root
-access can access their files. The simple string presented by `ls -l of
--rw-r----- bob users file.txt` instantly tells bob that (with the exception of
-root) only he can modify file.txt, while other users in the group users can also
-read it, but nobody else has access. This short simple string forms the policy
-placed on that file. It’s simplicity means that the restrictions placed on that
-file are easily verifiable. It is not necessary to verify all the code on the
-system, because we know that the Linux kernel will enforce this policy.
+properties of their files with `ls -l`) that only they, and anybody with root
+access can access their files. The simple string presented by `ls -l` of
+`-rw-r----- bob users file.txt` instantly tells `bob` that (with the exception
+of root) only he can modify `file.txt`, while other users in the group users can
+also read it, but nobody else has access. This short simple string forms the
+policy placed on that file. It’s simplicity means that the restrictions placed
+on that file are easily verifiable. It is not necessary to verify all the code
+on the system, because we know that the Linux kernel will enforce this policy.
 
 ### Implementing a Capability Based Security Model
 
@@ -523,16 +523,19 @@ group cannot compromise the other’s resources.
 
 ### Kernel Objects
 
-Kernel Object Capability Type Description Procedure Table create Create
-procedure with given identifier push_cap Add capability to procedure with given
-identifier delete_cap Delete capability from procedure with given identifier and
-index call Call a procedure by given id and arguments. delete Delete a procedure
-by identifier. set_entry Set a procedure with given identifier as the entry
-procedure. get_entry Get the id of the entry procedure. list Get the id list of
-all available procedures Storage read Read from the memory by the given address.
-write Write to the memory by the given address. Log write Append log record with
-given topics. Gas received The total amount of gas received from user. send Send
-gas on an external address
+| Kernel Object | Capability Type | Description                                                         |
+|---------------|-----------------|---------------------------------------------------------------------|
+| Procedure     | create          | Create procedure with given identifier.                             |
+|               | push_cap        | Add capability to procedure with given identifier                   |
+|               | delete_cap      | Delete capability from procedure with given identifier and index    |
+|               | call            | Call procedure by given id and arguments.                           |
+|               | delete          | Delete procedure by identifier.                                     |
+|               | entry           | Set the procedure with given identifier as the entry procedure.     |
+| Storage       | read            | Read from the memory by the given address.                          |
+|               | write           | Write to the memory by the given address.                           |
+| Log           | write           | Append log record with given topics.                                |
+| Gas           | received        | The total amount of gas received from user.                         |
+|               | send            | The total amount of gas received from user.                         |
 
 Each Kernel Object is a category of related capability types. Kernel objects
 designate the resources in the kernel that are protected by the kernel reference
