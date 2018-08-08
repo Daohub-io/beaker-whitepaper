@@ -505,7 +505,7 @@ forced to follow a specific permission model that does not fit their needs and
 still maintain safety through establishing explicit access control within the
 system.
 
-[!Separation](media/Separation.svg "Separation")
+![Separation](media/Separation.svg "Separation")
 
 *Figure: By separating admin management from user management, the principle of
 least authority can be applied.*
