@@ -24,43 +24,7 @@
 \urlstyle{same}  % don't use monospace font for urls
 \usepackage{color}
 \usepackage{listings}
-\usepackage{fancyvrb}
-\newcommand{\VerbBar}{|}
-\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
-\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
-% Add ',fontsize=\small' for more characters per line
-\newenvironment{Shaded}{}{}
-\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{{#1}}}}
-\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.56,0.13,0.00}{{#1}}}
-\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
-\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
-\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
-\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.53,0.00,0.00}{{#1}}}
-\newcommand{\CharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
-\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
-\newcommand{\StringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
-\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
-\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.73,0.40,0.53}{{#1}}}
-\newcommand{\ImportTok}[1]{{#1}}
-\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textit{{#1}}}}
-\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.73,0.13,0.13}{\textit{{#1}}}}
-\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
-\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
-\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{{#1}}}
-\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.02,0.16,0.49}{{#1}}}
-\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.10,0.09,0.49}{{#1}}}
-\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{{#1}}}}
-\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.40,0.40,0.40}{{#1}}}
-\newcommand{\BuiltInTok}[1]{{#1}}
-\newcommand{\ExtensionTok}[1]{{#1}}
-\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.74,0.48,0.00}{{#1}}}
-\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.49,0.56,0.16}{{#1}}}
-\newcommand{\RegionMarkerTok}[1]{{#1}}
-\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
-\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
-\newcommand{\AlertTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{{#1}}}}
-\newcommand{\ErrorTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{{#1}}}}
-\newcommand{\NormalTok}[1]{{#1}}
+
 \usepackage{longtable,booktabs}
 \usepackage{graphicx,grffile}
 \makeatletter
@@ -74,9 +38,6 @@
 \setlength{\parindent}{0pt}
 \setlength{\parskip}{6pt plus 2pt minus 1pt}
 \setlength{\emergencystretch}{3em}  % prevent overfull lines
-\providecommand{\tightlist}{%
-  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
-\setcounter{secnumdepth}{0}
 
 
 % Redefines (sub)paragraphs to behave more like sections
@@ -118,10 +79,9 @@ protocols.
 \newpage
 
 \section{Introduction}\label{introduction}
-
 \begin{quote}
 ``Every program and every privileged user of the system should operate
-using the least amount of privilege necessary to complete the job.''''''
+using the least amount of privilege necessary to complete the job.''
 
 --- Jerome Saltzer, Communications of the ACM
 \end{quote}
@@ -158,7 +118,6 @@ demonstrate these security guarantees to others without requiring
 manual-code verification.
 
 \section{Problems}\label{problems}
-
 Smart contracts are, by their nature, unforgiving machines that follow
 the their specification to the letter. This is one of the selling points
 of smart contracts, but it can also be their downfall as the machine
@@ -182,7 +141,6 @@ resources to undertake a sufficient verification of that code, and to
 look at the contract on the blockchain is to simply look at a black box.
 
 \section{Existing Work}\label{existing-work}
-
 The design and development of decentralized organizations implemented on
 Ethereum have so far failed to be standardized. Due to the generally
 highly specialized nature of these systems, most existing service
@@ -239,7 +197,6 @@ allow users an ability to verify these contracts on their own without
 relying on 3rd party trust.
 
 \section{Overview}\label{overview}
-
 \begin{figure}[H]
     \includegraphics[width=0.49\textwidth]{media/NormalKernelOverview.pdf}
     \includegraphics[width=0.49\textwidth]{media/BeakerKernelOverview.pdf}
@@ -281,7 +238,6 @@ operating through system calls, the operating system kernel has the
 final say on what the contract can or cannot do.
 
 \subsection{Procedures}\label{procedures}
-
 A Procedure is a smart contract that can be executed by the kernel.
 Unlike normal smart contracts, procedures have several restrictions.
 Critically, procedures are only able to access state changes via system
@@ -296,7 +252,6 @@ procedure state across separate transaction calls.
 
 \subsection{On-Chain Code
 Verification}\label{on-chain-code-verification}
-
 In order to verify that a procedure follows certain restrictions we use
 On-Chain Code Verification, or OCCV for short. OCCV is the use of a
 trusted smart contract to read and verify the code of an untrusted smart
@@ -320,7 +275,6 @@ do this check only once however, since in Ethereum the code of a
 contract can never change.
 
 \subsection{System Calls}\label{system-calls}
-
 As we covered above, a traditional operating system achieves
 introspection and control by interposing itself between the processes
 that are running and all other parts of the system including storage,
@@ -411,7 +365,6 @@ exokernel design, where the kernel itself should stay out of the user's
 code as much as possible.
 
 \subsection{Procedure Creation}\label{procedure-creation}
-
 Creating and adding a procedure to the procedure table involves creating
 the code for the procedure and handing it to the kernel's procedure
 preprocessor for on-chain verification. If the code passes verification
@@ -451,7 +404,6 @@ included in the procedure table.}
 \end{enumerate}
 
 \subsection{Entry Procedure}\label{entry-procedure}
-
 We have established that a Beaker kernel instance has to accept two
 types of transactions:
 
@@ -509,7 +461,6 @@ for executing an entry procedure.}
 
 \subsection{Auditability and the Principle of Least
 Privilege}\label{auditability-and-the-principle-of-least-privilege}
-
 Existing systems such as DSLs (Domain-Specific Languages) or libraries
 offer some level of verification and guarantees. Before the smart
 contracts are deployed, the developer is able to use these tools to
@@ -542,7 +493,6 @@ In order to do this, we need a security model to apply to procedures and
 system calls.
 
 \section{Security Model}\label{security-model}
-
 We established two critical components of the Beaker exokernel:
 introspection via system calls, and isolation via procedures to achieve
 the principle of least privilege.
@@ -576,7 +526,6 @@ resource.
 
 \subsection{Criteria for a Policy
 Mechanism}\label{criteria-for-a-policy-mechanism}
-
 The tradeoffs in designing a policy mechanism are many. If the policy
 mechanism is too simple, it will not be able to provide the necessary
 security guarantees. If it is too complex, then the system becomes far
@@ -641,7 +590,6 @@ enforce this policy.
 
 \subsection{Implementing a Capability Based Security
 Model}\label{implementing-a-capability-based-security-model}
-
 All policies in Beaker are applied directly to procedures. Beaker is a
 capability-based OS and therefore the policies take the form of a
 Capability List. Each capability in this list is an unforgeable key.
@@ -696,7 +644,6 @@ authority. The advantage of eschewing such a feature is that it makes
 the capabilities more static and auditable.
 
 \subsection{Custom User Permissions}\label{custom-user-permissions}
-
 A capability-based security model allows the flexibility to define a
 procedure that can act as a custom permission system akin to an access
 control list. With a custom permission system, users are free do define
@@ -724,7 +671,6 @@ affect the organization. This in effect can be used as an explicit
 safeguard where each group cannot compromise the other's resources.
 
 \subsection{Kernel Objects}\label{kernel-objects}
-
 \begin{table}[H]
     \caption{Kernel objects.}
     \centering{}%
@@ -766,7 +712,6 @@ kernel reference monitor and can only be indirectly accessed by invoking
 a system call.
 
 \subsubsection{Procedure Table}\label{procedure-table}
-
 Sometimes, procedures need to access information about themselves as
 well as the state of the kernel. This includes the capabilities it has
 available as well as finding what other procedures are available. It is
@@ -779,7 +724,6 @@ is defined by a unique identifier, contract address and a capability
 list.
 
 \subsubsection{Storage}\label{storage}
-
 Storage is the only way procedures can store and modify data. However,
 allowing procedures to directly access storage is unsafe and would
 inadvertently allow procedures to access or modify data that they do not
@@ -798,7 +742,6 @@ the capacity of the storage system itself, so will not be a limiting
 factor long term.
 
 \subsubsection{Events}\label{events}
-
 Events are crucial for signalling verified changes to the outside world,
 accessing data asynchronously, as well as their use in establishing
 off-chain networks. In Ethereum, logs can be ascribed from 0-4 topics,
@@ -810,14 +753,12 @@ object table above. This capability type is then refined to dictate
 which topics it can write to.
 
 \subsubsection{Gas}\label{gas}
-
 The Gas object is defined as the total gas resources the kernel has
 available and designates how much resources are allocated to a procedure
 to spend during execution as well as how much gas it is allowed to send
 to an external address.
 
 \section{Protocol Token}\label{protocol-token}
-
 Software is rarely perfect or complete and operating systems are no
 exception. The standardization of a kernel such as Beaker thus requires
 experimentation through multiple design iterations, thorough testing and
@@ -831,7 +772,6 @@ designing, developing and introducing standardization of the Beaker
 exokernel protocol.
 
 \subsection{Version Registry}\label{version-registry}
-
 To establish participation, the token will used to vote on future
 decisions involving changes to Beaker's design and specification. This
 will take the form of a version registry. This registry will contain all
@@ -854,7 +794,6 @@ within its registry, and will not have the capability to modify or
 access any data using the Beaker kernel.
 
 \section{Summary}\label{summary}
-
 The Beaker exokernel protocol provides a secure environment for
 organizations to establish extendible business logic through restricted
 smart contracts defined as procedures.
@@ -867,7 +806,6 @@ reduce the burden of verification and communicate the security design of
 the system to others in a transparent manner.
 
 \section{Acknowledgments}\label{acknowledgments}
-
 We would like to express our gratitude to other projects notably our
 mentors and advisors, and the many welcoming people in the Ethereum
 community.
