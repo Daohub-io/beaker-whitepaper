@@ -537,7 +537,7 @@ group cannot compromise the other’s resources.
 |               | write           | Write to the memory by the given address.                           |
 | Log           | write           | Append log record with given topics.                                |
 | Gas           | received        | The total amount of gas received from user.                         |
-|               | send            | The total amount of gas received from user.                         |
+|               | send            | Send gas to an external address                                     |
 
 Each Kernel Object is a category of related capability types. Kernel objects
 designate the resources in the kernel that are protected by the kernel reference
