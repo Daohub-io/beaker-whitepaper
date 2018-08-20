@@ -15,4 +15,4 @@ Whitepaper.pdf : Whitepaper.tex $(IMGS)
 	inkscape --file=$< --export-area-page --without-gui --export-pdf=$@
 
 clean:
-	rm *.pdf *.aux *.toc *.dvi *.fdb_latexmk *.fls *.log *.out media/*.pdf
+	rm -f *.pdf *.aux *.toc *.dvi *.fdb_latexmk *.fls *.log *.out media/*.pdf

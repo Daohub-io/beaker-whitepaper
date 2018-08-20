@@ -300,11 +300,7 @@ instructions, and are the responsibility of the designer of the contract
 \begin{minipage}{\linewidth}
 \begin{lstlisting}[language=c,commentstyle=\color{mygreen},basicstyle=\ttfamily,identifierstyle=\color{blue},caption=Sequence of steps to perform a system call.]
 CALLER         // Get Caller
-DUP            // Duplicate to Stack
-EQ             // Check if Caller is Kernel Instance
-NOT            // If not..
-PUSH erraddr   // Throw "Wrong Address" error
-JUMPI          // Otherwise..
+GAS            // Put all the available gas on the stack
 DELEGATECALL   // Delegate Call to Caller
 \end{lstlisting}
 \end{minipage}
