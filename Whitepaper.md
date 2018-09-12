@@ -219,13 +219,9 @@ are the responsibility of the designer of the contract (presumably with
 significant assistance from libraries).
 
 ```c
-CALLER         // Get Caller
-DUP            // Duplicate to Stack
-EQ             // Check if Caller is Kernel Instance
-NOT            // If not..
-PUSH erraddr   // Throw “Wrong Address” error
-JUMPI          // Otherwise..
-DELEGATECALL   // Delegate Call to Caller
+CALLER         // Get  Caller
+GAS            // Put all the  available  gas on the  stack
+DELEGATECALL   //  Delegate  Call to  Caller
 ```
 
 These instructions ensure that the contract is only calling to the original
@@ -588,40 +584,6 @@ which topics it can write to.
 The Gas object is defined as the total gas resources the kernel has available
 and designates how much resources are allocated to a procedure to spend during
 execution as well as how much gas it is allowed to send to an external address.
-
-## Protocol Token
-
-Software is rarely perfect or complete and operating systems are no exception.
-The standardization of a kernel such as Beaker thus requires experimentation
-through multiple design iterations, thorough testing and formal verification to
-achieve its goal as an open standard for a secure and extensible exokernel
-protocol.
-
-To incentivize adoption and development of Beaker, we propose creating a
-decentralized organization (Beaker Foundation) and token (Beaker Token) for
-establishing participation and governance within the project of designing,
-developing and introducing standardization of the Beaker exokernel protocol.
-
-### Version Registry
-
-To establish participation, the token will used to vote on future decisions
-involving changes to Beaker’s design and specification. This will take the form
-of a version registry. This registry will contain all of the official versions
-of the Beaker kernel. In order for a new version of Beaker to be added to the
-registry it must receive the support of the bearers of the Beaker Token, and in
-this way those bearers can shape the future of Beaker and its protocol.
-
-These decisions regarding the registry are enforced within the Beaker
-Foundation, which itself will use Beaker. The registry will be managed through a
-registry procedure, the registry procedure itself can be amended if required in
-the future.
-
-It is noted that although the Beaker Foundation will be used to establish future
-versions of the Beaker exokernel, it will be within the consumers total control
-which version or reference they wish to use. The Beaker Foundation, as a 3rd
-party organization, will have no capabilities over past or present established
-versions of the kernel within its registry, and will not have the capability to
-modify or access any data using the Beaker kernel.
 
 ## Summary
 
