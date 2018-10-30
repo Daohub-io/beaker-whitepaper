@@ -361,17 +361,21 @@ exokernel design, where the kernel itself should stay out of the user's
 code as much as possible.
 
 \subsection{Procedure Creation}\label{procedure-creation}
-Creating and adding a procedure to the procedure table involves creating
-the code for the procedure and handing it to the kernel's procedure
-preprocessor for on-chain verification. If the code passes verification
-it is then added to the kernel's procedure table and can be executed by
-the kernel.
+Creating and adding a procedure to the kernel's procedure table (so that it can
+be executed) involves two steps. The first is to create and deploy the procedure
+as you would any other smart contract. Once it is deployed, it can then be
+registered with the kernel by simply giving the kernel the address of the code
+and letting the kernel handle the registration process. During this process, the
+kernel will first run the code through the verification process to ensure that
+the only state changing code it contains is run through the kernel. If the code
+passes this verification process, it is then added to the kernel's procedure
+table.
 
-By default, the procedure preprocessor runs on-chain. Although costly,
-verifying unprotected procedures is the core mechanism to prevent the
-execution of untrusted opcodes. Thus, by verifying every procedure
-beforehand, the kernel can maintain integrity within its environment in
-a flexible manner without significant cost during runtime.
+An important feature of this verification process is that it runs on-chain.
+Although more expensive then verifying things off-chain, this verification
+process is the core mechanism by which the kernel prevents execution of
+untrusted opcodes. This verification means that the 'proof' now lies on-chain,
+and we aren't simply trusting developers to have done the correct verifications.
 
 \begin{figure}[htbp]
 \centering
