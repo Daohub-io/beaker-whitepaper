@@ -389,18 +389,21 @@ included in the procedure table.}
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
 \item
-  First, the contract is parsed and verified to not contain any illegal
-  instructions. If any illegal opcodes are found, it is rejected.
+  First, the contract is built and deployed as usual.
+\item
+  Second, the address of the contract is passed to the kernel for registration.
+  The kernel parses the code of this contract and verifies it does not contain
+  any illegal opcodes. If any illegal opcodes are found, the contract is
+  rejected.
 \item
   To designate a syscall dispatch, the code must include a valid syscall
   entry. To allow the kernel ownership, it checks if the contract has an
   additional header that prevents unauthorized calls to the contract.
 \item
-  When all the requested syscalls are injected, the contract is now a
-  protected procedure and is ready to be deployed as a contract.
+  Once the code as been verified it is added to the kernel's procedure table,
+  and can then be assigned capabilities.
 \item
-  Once deployed, the procedure is added to the procedure table and
-  assigned a list of designated capabilities.
+  The procedure can then be used.
 \end{enumerate}
 
 \subsection{Entry Procedure}\label{entry-procedure}
