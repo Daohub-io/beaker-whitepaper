@@ -95,7 +95,7 @@ While lucrative, the development and deployment of such organizations
 has a high barrier of entry. Smart contract development practices and
 tooling are still in their prenatal stages of maturity, with zero margin
 for error. Additionally, organizations must be extensible upfront to
-allow changes and upgrades to such protocols and still maintain high
+allow changes and upgrades to their systems while still maintain high
 standards of safety.
 
 Beaker is a minimal open-source exokernel protocol that serves as a
@@ -114,13 +114,13 @@ environment. The Beaker kernel provides the building blocks and
 primitives that organizations need to build more nuanced governance
 models to suit their use case. Most critically, by using the primitives
 Beaker provides, designers of these systems will then be able to
-demonstrate these security guarantees to others without requiring
-manual-code verification.
+demonstrate these security guarantees to others without requiring such a high
+level of manual-code verification.
 
 \section{Problems}\label{problems}
 Smart contracts are, by their nature, unforgiving machines that follow
 the their specification to the letter. This is one of the selling points
-of smart contracts, but it can also be their downfall as the machine
+of smart contracts, but it can also be their downfall, as the machine
 will faithfully execute any flaw or mistake in that code. This is a well
 known property of smart contracts, and is tackled in a variety of ways.
 By employing lower level primitives like multi-signature wallets or
@@ -153,7 +153,7 @@ security vulnerabilities. One of the prominent examples was ``The DAO''
 that was built to act as a hedge fund with a built-in proposal protocol
 to manage funds. The implementation was written in a highly specialized
 manner and did not separate the security mechanisms from the business
-logic. This lead to a large attack space and ultimately a re-entrancy
+logic. This lead to a large attack surface and ultimately a re-entrancy
 vulnerability that allowed the attacker to steal funds from the
 organization itself.
 
@@ -255,9 +255,8 @@ Verification}\label{on-chain-code-verification}
 In order to verify that a procedure follows certain restrictions we use
 On-Chain Code Verification, or OCCV for short. OCCV is the use of a
 trusted smart contract to read and verify the code of an untrusted smart
-contract. By reading an untrusted contract before creation (CREATE
-opcode) or after creation (EXTCODECOPY opcode), we can now make
-assertions what it can and cannot do.
+contract. By reading the code of an untrusted contract (via the EXTCODECOPY
+opcode), we can analyse it and make assertions what it can and cannot do.
 
 With OCCV we can check if an untrusted contract has any opcodes that we
 don't allow. While this can be limited, this allows us to check if a
@@ -288,10 +287,11 @@ complete control over what that process can and cannot do. These
 requests to the operating system that a process makes are called System
 Calls.
 
-The sequence of EVM opcodes below define a Beaker system call. The input
-and output parameters of the system call are set prior to these
-instructions, and are the responsibility of the designer of the contract
-(presumably with significant assistance from libraries).
+Beaker also uses this system call mechanism, and the sequence of EVM opcodes
+that define a Beaker system call are outlined below. The input and output
+parameters of the system call are set prior to these instructions, and are the
+responsibility of the designer of the contract (presumably with significant
+assistance from libraries).
 
 
 
@@ -336,7 +336,7 @@ done when a procedure executes a system call}
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
 \item
-  Kernel instance does a CALLCODE (i.e.~a regular library) to the kernel
+  Kernel instance does a CALLCODE (i.e.~a regular library call) to the kernel
   library, executing the function in the kernel library that executes
   procedure.
 \item
@@ -433,7 +433,8 @@ executed as a normal procedure. When the kernel instance receives an
 external transaction from another Ethereum address, it simply forwards
 the message data to the entry procedure. Thus whenever any transaction
 reaches the kernel, it is up to our entry procedure to decide what
-should happen and act as the interface to the kernel.
+should happen and act as the interface to the kernel. This would look something
+like this:
 
 \begin{figure}[htbp]
 \centering
