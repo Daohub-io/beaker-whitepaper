@@ -5,4 +5,4 @@ jobs:
        - image: danteev/texlive
      steps:
        - checkout
-       - run: latexmk -pdf Whitepaper.tex
+       - run: make
