@@ -204,10 +204,10 @@ The Ethereum smart contract blockchain is a concrete VM (virtual machine) which
 is very well defined and standardized. However, Ethereum itself provides no
 platform or protocols on which to base applications which have more complex
 security requirements (which is nearly all smart contract applications). A
-variety of platforms and protocols have been implemented and used successfully,
-however, they are not standardized. These platforms and protocols are highly
-fragmented, as they are each built to serve a particular use case, and they are
-closely linked to the model of the organization they were designed for.
+variety of platforms and protocols have been implemented and used successfully.
+However, these platforms and protocols are highly fragmented, as they are each
+built to serve a particular use case, and they are closely linked to the model
+of the organization they were designed for.
 
 The lack of a standard model for security mechanisms has so far lead to many
 security vulnerabilities. One of the prominent examples was ``The DAO''
@@ -302,7 +302,7 @@ programmer had relinquished control and the program would execute as
 written.
 
 Driven by a need to manage multiple programs, and eventually include
-restrictions, quotas and permissions, operating systems were created.
+restrictions, quotas, and permissions, operating systems were created.
 With operating systems, the programs weren't just executed blindly by
 the machine. When the machine encountered an instruction that required
 hardware access, it suspended the running program and passed that
@@ -316,24 +316,28 @@ computers. Smart contracts are thoroughly audited and tested, but once
 they are on the blockchain they execute on the raw machine. If we want a
 system where we can interpose ourselves between our components and
 potentially dangerous resources (such as our storage) we need to make
-stronger guarantees about the safety of our system without having to
-apply the same level of verification to every component.
+strong guarantees that components of our system will only abide by the policies
+we set, and won't break the rules.
 
-In order to do so, we need to require that all contracts interact with
-critical resources only through system calls. Once a contract is only
-operating through system calls, the operating system kernel has the
-final say on what the contract can or cannot do.
+In order to do so, we need to require that all contracts interact with critical
+resources only through system calls to our `kernel' that we have placed in
+between the code and the dangerous resources. Once a contract is only operating
+through system calls, the operating system kernel has the final say on what the
+contract can or cannot do.
 
 \subsection{Procedures}\label{procedures}
-A Procedure is a smart contract that can be executed by the kernel.
+A Procedure is a smart contract that can be executed by the kernel. This is the
+smallest independent component or unit of code. As far as the Ethereum VM is
+concerned they are normal smart contract.
 Unlike normal smart contracts, procedures have several restrictions.
 Critically, procedures are only able to access state changes via system
 calls, and are not able to directly access storage, make outside calls
 or send transactions.
 
 Much like processes are stored in a process table within a traditional
-operating system, procedures are stored within a Procedure Table. Each
-entry contains the id, capability list and address of the procedure.
+operating system, procedures are stored within a Procedure Table held by the
+kernel. Each
+entry contains the id, capability list, and address of the procedure.
 Unlike a process table however, the procedure table does not maintain
 procedure state across separate transaction calls.
 
@@ -346,14 +350,16 @@ contract. By reading the code of an untrusted contract (via the EXTCODECOPY
 opcode), we can analyse it and make assertions what it can and cannot do.
 
 With OCCV we can check if an untrusted contract has any opcodes that we
-don't allow. While this can be limited, this allows us to check if a
-contract can potentially: self destruct, make state changes, emit events
-or make an external call. This might not seem much, but the absence of
+don't allow. In particular this allows us to check if a
+contract can potentially: self destruct, make state changes, emit events,
+or make an external call. This might not seem like a big restriction, but the
+absence of
 such code allows us to make certain guarantees. For example: if the code
 does not contain the combination of SELFDESTRUCT, DELEGATECALL or
 CALLCODE, we now know that this code will never be able to be destroyed.
 
-In our case, the trusted contract will be our kernel, while the
+In our case, the trusted contract (which performs the verification) will be our
+kernel, while the
 untrusted contract would be a procedure. Before running a procedure, the
 kernel can check and verify the procedure, allowing the kernel to
 enforce certain restrictions or access control. The kernel only needs to
@@ -375,13 +381,10 @@ requests to the operating system that a process makes are called System
 Calls.
 
 Beaker also uses this system call mechanism, and the sequence of EVM opcodes
-that define a Beaker system call are outlined below. The input and output
-parameters of the system call are set prior to these instructions, and are the
+that define a Beaker system call are outlined below. The
+parameters of the system call are set prior to these 3 instructions, and are the
 responsibility of the designer of the contract (presumably with significant
 assistance from libraries).
-
-
-
 
 \definecolor{mygreen}{rgb}{0,0.6,0}
 \begin{minipage}{\linewidth}
@@ -404,14 +407,17 @@ accept system calls from procedures in its procedure table that it is
 currently calling. When a procedure is initially called, it is called
 via CALLCODE. This means that that our system, which we will call our
 ``kernel instance'', is the current storage and event space of the
-running code. It also means that the CALLER value, which is a global
+running code. It also means that the CALLER\footnote{One downside of this design
+is that the original sender of the transaction must be included in the payload
+of the transaction if it is needed. As the kernel address is more security
+critical, and is needed more often, it is placed in the CALLER value.} value,
+which is a global
 read-only value, is set to the address of our kernel instance. When our
 procedure does a DELEGATECALL, this address is maintained. As a
 consequence, whenever a kernel is executing a system call, it is able to
 simply check that the CALLER value is equal to its own address (it is
 necessary for this value to be hardcoded into the instance, which is
 performed during instantiation).
-
 
 \begin{figure}[htbp]
 \centering
@@ -423,7 +429,11 @@ done when a procedure executes a system call}
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
 \item
-  Kernel instance does a CALLCODE (i.e.~a regular library call) to the kernel
+  Kernel instance does a CALLCODE\footnote{The difference between CALLCODE and
+  DELEGATECALL is that CALLCODE resets the CALLER value to whichever contract
+  executed it. We use this to our advantage, as this sets the CALLER value to
+  the kernel instance, allowing us to use it in system calls.} (i.e.~a regular
+  library call) to the kernel
   library, executing the function in the kernel library that executes
   procedure.
 \item
