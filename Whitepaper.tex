@@ -219,7 +219,8 @@ vulnerability that allowed the attacker to steal funds from the
 organization itself.
 
 Of the recent projects that are making an impact in this area is the
-ZeppelinOS ZEP protocol by the Zeppelin Team. Users of smart contract
+ZeppelinOS\footnote{https://zeppelinos.org/} ZEP protocol by the Zeppelin Team.
+Users of smart contract
 libraries that use the ZEP protocol are able to vouch or vote for
 upgrades they wish to adopt. Only code that is sufficiently vouched for
 by the users is included in the system, with the developers working on
@@ -248,6 +249,17 @@ how the system is actually implemented. Relying on developers alone - to
 verify these systems as we do today - will not be enough to legitimize
 smart contracts as secure financial instruments that the mainstream
 market can trust long-term.
+
+AragonOS\footnote{https://aragon.org/} is another example of smart contract
+framework that seeks to take a more operating system style approach. Much like
+Beaker, AragonOS features a permission system and a kernel, however, after that
+the design diverges significantly. AragonOS aims to be a featureful platform on
+which to build smart contract applications. While the permission system of
+Beaker is targeted at isolating and limiting \emph{code}, the permission system
+of AragonOS is targeted at a higher level, and is only one component of a vast
+suite of features of the AragonOS platform. We take a different approach in that
+the layer which isolates the various code components should be as separate and
+minimal as possible, and independent of the features built on top of it.
 
 There is another branch of activity which has been able to make good progress in
 improving the state of the art, and that is by improving the languages and build
