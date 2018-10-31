@@ -6,3 +6,6 @@ jobs:
      steps:
        - checkout
        - run: make
+       - store_artifacts:
+          path: Whitepaper.pdf
+          destination: Whitepaper.pdf
