@@ -64,13 +64,12 @@ contracts}\label{beaker-a-security-protocol-and-framework-for-smart-contracts}
 
 \begin{abstract}\label{abstract}
 
-We describe a secure and extensible operating system for smart
-contracts. Using a capability-based exokernel protocol, we can
-facilitate secure and low friction peer-to-peer state management across
-multiple smart contracts on the Ethereum blockchain. The protocol is
-intended to serve as an open standard and building block, establishing
-interoperability between contracts that provide 3rd party services and
-protocols.
+We describe a secure and extensible operating system for smart contracts. Using
+a capability-based exokernel protocol, we can facilitate secure isolation of
+smart contract components, improve the smart contract upgrade process and
+prevent privilege escalation. The protocol is intended to serve as an open
+standard and building block upon which more advanced and tailored security
+models can be built.
 
 \end{abstract}
 
@@ -98,10 +97,13 @@ for error. Additionally, organizations must be extensible upfront to
 allow changes and upgrades to their systems while still maintain high
 standards of safety.
 
-Beaker is a minimal open-source exokernel protocol that serves as a
-building block for establishing secure and scalable organizations.
-Beaker enables organizations that will grow in complexity and will
-require long term extensibility.
+Beaker is a minimal open-source exokernel\footnote{An exokernel exposes as much
+of the underlying hardware the system as possible, without larger abstractions
+such as filesystems. In Beaker we expose all the underlying mechanisms (such as
+storage) directly to the contract, with only the permissions layer in-between.}
+protocol that serves as a building block for establishing secure and scalable
+organizations. Beaker enables organizations that will grow in complexity and
+will require long term extensibility.
 
 Using Beaker, users can establish an organization on the blockchain with
 a much higher level of confidence in it's stability and security. The
@@ -118,37 +120,96 @@ demonstrate these security guarantees to others without requiring such a high
 level of manual-code verification.
 
 \section{Problems}\label{problems}
-Smart contracts are, by their nature, unforgiving machines that follow
-the their specification to the letter. This is one of the main benefits
-of smart contracts, but it can also be their downfall, as the machine
-will faithfully execute any flaw or mistake in that code. This is a well
-known property of smart contracts, and is tackled in a variety of ways.
-By employing lower level primitives like multi-signature wallets or
-escrow, the users of smart contracts can build a more flexible and
-forgiving system on top of the raw and unforgiving Ethereum machine
+Smart contracts are, by their nature, unforgiving machines that follow the their
+specification to the letter. This is one of the main benefits of smart
+contracts, but it can also be their downfall, as the machine will faithfully
+execute any flaw or mistake in that code. This is a well known property of smart
+contracts, and is tackled in a variety of ways. One example is by employing
+lower level primitives like multi-signature wallets or escrow accounts. Using
+these tools we can encode a way in which participants in a transaction can
+``back out'' of a transaction, or ensure that the correct approvals procedure is
+in place. The developers of smart contracts can thereby build a more flexible
+and forgiving system on top of the raw and unforgiving Ethereum machine
 underneath.
 
-Building higher level systems however, increases the complexity of the
-system one is using. With this complexity comes the risk that one small
-error or vulnerability can bring down a whole system. This forces users
-to strike a balance between flexibility and complexity.
+Particularly for financial operations, building these higher level systems with
+these features is clearly necessary to be able to handle complex situations.
+However, these higher level systems dramatically increase the complexity of the
+system one is using. With this complexity comes another risk: one small mistake
+or vulnerability in the code can bring down the whole system. This forces users
+to strike a balance between flexibility of the system and complexity of the
+code. Increasingly, this balance has fallen more on the side of complexity.
 
-Another issue, is the lack of transparency within the verification
-process itself. While a developer can verify their system themselves,
-everyone else using that system simply has to trust that developer. The
-users will unlikely have access to the source code, expertise, or even
-resources to undertake a sufficient verification of that code, and to
-look at the contract on the blockchain is to simply look at a black box.
+\subsection{Isolation}\label{isolation}
+As smart contracts are growing in size and capabilities, complexity will
+progressively become a larger and larger issue. Already today we see many smart
+contracts being comprised of tens of different smart contracts operating
+together. These ``smart contract systems'' are also being provided with
+mechanisms to perform upgrades, and the task of wrangling all of these issues is
+passed to the developer, with little support from their tools and underlying
+systems, and little oversight from their stakeholders.
+
+Take an example of a smart contract system that contains multiple components.
+One is tasked with maintaining the list of members of the group, and another is
+tasked with maintaining an allocation of tokens. As all of this code operates in
+the same space, there is nothing actively preventing the code which is supposed
+to be maintaining the list of members from modifying the allocation of tokens.
+The only thing preventing this code from reallocating all of the tokens, is that
+the developers and their auditors have correctly written and checked the code
+such that it doesn't.
+
+Developers and auditors are not weaponless in this fight, and rely on a variety
+of tools including DSLs (Domain Specific Languages), static analysis, and formal
+verification to write this code correctly and perform the right checks. This has
+two primary limitations:
+
+\begin{itemize}
+  \item This is a difficult and complicated process. Much like any other complex
+  process, a single mistake can result in a major flaw. This flaw is not caught
+  by any other system. On a regular computer or server, if the code tries to do
+  something too far out of its bounds it will be caught by the system. In smart
+  contracts all code can make any change to the system.
+  \item These tools are available only to highly trained developers and auditors
+  with the resources (i.e. time) to apply those skills to the code. Other
+  stakeholders in the system are able to gain little or no insight into the
+  code. They simply have to trust the developer.
+\end{itemize}
+
+\subsection{Upgrades}\label{upgrades}
+One area where the lack of isolation in smart contracts is most problematic is
+in the upgrading of smart contracts. DSLs, verification, auditing etc. are
+excellent tools to ensure that a smart contract will behave as intended. One
+area where they struggle to maintain their effectiveness is during upgrades.
+With a multi-component smart contract, it is increasingly possible to update one
+or more of these components as the need arises, including for important security
+fixes.
+
+This ability to change the code in a smart contract gives us the ability to
+correct errors, however, it also gives us the ability to introduce new ones, or
+allow malicious actors to introduce new ones. In the example above, what was
+once a component to maintain a list of members can now become a component which
+siphons all of the funds held by the contract to an account held by a
+disgruntled developer.
+
+In this example, the smart contract system suffered due to a lack of isolation.
+Perhaps it was a vulnerability in the members list component that was exploited,
+but the damage was far reaching and unrestricted. In traditional computing this
+is a common issue that needs guarding against, and is known as \textbf{privilege
+escalation}. This is also a concern in smart contracts without upgrades, but
+with upgrades the path to privilege escalation becomes easier, and more
+difficult to defend against.
 
 \section{Existing Work}\label{existing-work}
-The design and development of decentralized organizations implemented on
-Ethereum have so far failed to be standardized. Due to the generally
-highly specialized nature of these systems, most existing service
-platforms and protocols developed are highly fragmented, with the design
-of the protocol closely linked to the model of the organization it was
-designed for.
+The Ethereum smart contract blockchain is a concrete VM (virtual machine) which
+is very well defined and standardized. However, Ethereum itself provides no
+platform or protocols on which to base applications which have more complex
+security requirements (which is nearly all smart contract applications). A
+variety of platforms and protocols have been implemented and used successfully,
+however, they are not standardized. These platforms and protocols are highly
+fragmented, as they are each built to serve a particular use case, and they are
+closely linked to the model of the organization they were designed for.
 
-The lack of a standard model for organizations has so far lead to many
+The lack of a standard model for security mechanisms has so far lead to many
 security vulnerabilities. One of the prominent examples was ``The DAO''
 that was built to act as a hedge fund with a built-in proposal protocol
 to manage funds. The implementation was written in a highly specialized
@@ -187,6 +248,32 @@ how the system is actually implemented. Relying on developers alone - to
 verify these systems as we do today - will not be enough to legitimize
 smart contracts as secure financial instruments that the mainstream
 market can trust long-term.
+
+There is another branch of activity which has been able to make good progress in
+improving the state of the art, and that is by improving the languages and build
+tools of developers. This includes DSLs (Domain Specific Languages), static
+analysis tools, and even some that follow a similar ideal to Beaker and
+incorporate a capability object model directly into the language. These tools
+are a great boon for developers and can dramatically reduce programmer errors.
+However, there is one very large drawback to these systems, which is that they
+are for the benefit of the developer. Once the code is built and running
+on-chain these tools have completed their task and are no longer in use. The
+responsibility is placed squarely on the developers to ensure that these tools
+are used correctly, and that the code that is running on chain accurately
+reflects the steps they took.
+
+However, this still relies on completely trusting developers and that the
+constraints the developers believed they implemented were faithfully executed by
+an off-chain compiler. None of this information is included or verified
+\emph{on-chain}.
+
+Developers and users in the industry are beginning to realise the extent of the
+problem, and some ideas are being worked on to try and alleviate some of these
+issues, Ethereum's STATICCALL is a good example of this. STATICCALL prevents
+libraries which are being called from modifying any state. STATICCALL is a great
+solution, however, it does not provide the array of tools developers need in
+more complex situations. This is an isolation primitive that is powerful, but
+too restrictive for the general case.
 
 To solve this, we propose a more general approach by creating an
 explicit security model for developing smart contracts that allows
