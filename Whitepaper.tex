@@ -400,7 +400,9 @@ assistance from libraries).
 
 \definecolor{mygreen}{rgb}{0,0.6,0}
 \begin{minipage}{\linewidth}
-\begin{lstlisting}[language=c,commentstyle=\color{mygreen},basicstyle=\ttfamily,identifierstyle=\color{blue},caption=Sequence of steps to perform a system call.]
+\begin{lstlisting}[language=c,commentstyle=\color{mygreen},basicstyle=\ttfamily,
+  identifierstyle=\color{blue},
+  caption=Sequence of steps to perform a system call.]
 CALLER         // Get Caller
 GAS            // Put all the available gas on the stack
 DELEGATECALL   // Delegate Call to Caller
