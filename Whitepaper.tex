@@ -66,7 +66,7 @@ contracts}\label{beaker-a-security-protocol-and-framework-for-smart-contracts}
 
 We describe a secure and extensible operating system for smart contracts. Using
 a capability-based exokernel protocol, we can facilitate secure isolation,
-perform upgrades in a secure and robust manner, and prevent privilege escalation 
+perform upgrades in a secure and robust manner, and prevent privilege escalation
 at any point in the development process. The protocol is intended to serve as an open
 standard and building block upon which more advanced and tailored security
 models can be built.
@@ -458,13 +458,11 @@ done when a procedure executes a system call}
 
 The process for executing a procedure is as follows:
 
+\begin{minipage}{\textwidth}
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
 \item
-  Kernel instance does a CALLCODE\footnote{The difference between CALLCODE and
-  DELEGATECALL is that CALLCODE resets the CALLER value to whichever contract
-  executed it. We use this to our advantage, as this sets the CALLER value to
-  the kernel instance, allowing us to use it in system calls.} (i.e.~a regular
+  Kernel instance does a CALLCODE\footnotemark (i.e.~a regular
   library call) to the kernel
   library, executing the function in the kernel library that executes
   procedure.
@@ -480,6 +478,11 @@ The process for executing a procedure is as follows:
   After the system call is completed, the kernel library returns to the
   kernel instance, which then returns to the procedure.
 \end{enumerate}
+\end{minipage}
+\footnotetext{The difference between CALLCODE and
+  DELEGATECALL is that CALLCODE resets the CALLER value to whichever contract
+  executed it. We use this to our advantage, as this sets the CALLER value to
+  the kernel instance, allowing us to use it in system calls.}
 
 \subsection{Procedure Registration}\label{procedure-creation}
 Creating and adding a procedure to the kernel's procedure table (so that it can
