@@ -1,0 +1,11 @@
+version: 2
+jobs:
+   build:
+     docker:
+       - image: danteev/texlive
+     steps:
+       - checkout
+       - run: make
+       - store_artifacts:
+          path: Whitepaper.pdf
+          destination: Whitepaper.pdf

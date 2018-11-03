@@ -64,13 +64,12 @@ contracts}\label{beaker-a-security-protocol-and-framework-for-smart-contracts}
 
 \begin{abstract}\label{abstract}
 
-We describe a secure and extensible operating system for smart
-contracts. Using a capability-based exokernel protocol, we can
-facilitate secure and low friction peer-to-peer state management across
-multiple smart contracts on the Ethereum blockchain. The protocol is
-intended to serve as an open standard and building block, establishing
-interoperability between contracts that provide 3rd party services and
-protocols.
+We describe a secure and extensible operating system for smart contracts. Using
+a capability-based exokernel protocol, we can facilitate secure isolation,
+perform upgrades in a secure and robust manner, and prevent privilege escalation
+at any point in the development process. The protocol is intended to serve as an open
+standard and building block upon which more advanced and tailored security
+models can be built.
 
 \end{abstract}
 
@@ -91,74 +90,155 @@ blockchain technology to securely manage and track a broad range of
 predominantly financial interactions without requiring a trusted third
 party.
 
-While lucrative, the development and deployment of such organizations
+While this unlocks a huge potential, the development and deployment of such
+organizations
 has a high barrier of entry. Smart contract development practices and
 tooling are still in their prenatal stages of maturity, with zero margin
 for error. Additionally, organizations must be extensible upfront to
-allow changes and upgrades to such protocols and still maintain high
+allow changes and upgrades to their systems while still maintain high
 standards of safety.
 
-Beaker is a minimal open-source exokernel protocol that serves as a
-building block for establishing secure and scalable organizations.
-Beaker enables organizations that will grow in complexity and will
-require long term extensibility.
+Beaker is a minimal open-source exokernel\footnote{An exokernel exposes as much
+of the underlying hardware the system as possible, without larger abstractions
+such as filesystems. In Beaker we expose all the underlying mechanisms (such as
+storage) directly to the contract, with only the permissions layer in-between.}
+protocol that serves as a building block for establishing secure and scalable
+organizations. Beaker enables organizations that will grow in complexity and
+will require long term extensibility.
 
 Using Beaker, users can establish an organization on the blockchain with
-a much higher level of confidence in it's stability and security. The
+a much higher level of confidence in its stability and security. The
 safety model Beaker provides not only reduces risk, but allows
 organizations to be designed in a much more flexible and robust manner.
 
 The exokernel model of Beaker allows organizations to freely define
 their own systems and procedures, but within a safe and controlled
 environment. The Beaker kernel provides the building blocks and
-primitives that organizations need to build more nuanced governance
+primitives that organizations need to build more nuanced security and governance
 models to suit their use case. Most critically, by using the primitives
 Beaker provides, designers of these systems will then be able to
-demonstrate these security guarantees to others without requiring
-manual-code verification.
+demonstrate these security guarantees to others without requiring manual-code verification.
 
 \section{Problems}\label{problems}
-Smart contracts are, by their nature, unforgiving machines that follow
-the their specification to the letter. This is one of the selling points
-of smart contracts, but it can also be their downfall as the machine
-will faithfully execute any flaw or mistake in that code. This is a well
-known property of smart contracts, and is tackled in a variety of ways.
-By employing lower level primitives like multi-signature wallets or
-escrow, the users of smart contracts can build a more flexible and
-forgiving system on top of the raw and unforgiving Ethereum machine
+Smart contracts are, by their nature, unforgiving machines that follow the their
+specification to the letter. This is one of the main benefits of smart
+contracts, but it can also be their downfall, as the machine will faithfully
+execute any flaw or mistake in that code. This is a well known property of smart
+contracts, and is tackled in a variety of ways. One example is by employing
+lower level primitives like multi-signature wallets or escrow accounts. Using
+these tools we can encode a way in which participants in a transaction can
+``back out'' of a transaction, or ensure that the correct approvals procedure is
+in place. The developers of smart contracts can thereby build a more flexible
+and forgiving system on top of the raw and unforgiving Ethereum machine
 underneath.
 
-Building higher level systems however, increases the complexity of the
-system one is using. With this complexity comes the risk that one small
-error or vulnerability can bring down a whole system. This forces users
-to strike a balance between flexibility and complexity.
+Particularly for financial operations, building higher level systems with
+these features is clearly necessary to be able to handle complex situations.
+However, these higher level systems dramatically increase the complexity of the
+system one is using. With this complexity comes another risk: one small mistake
+or vulnerability in the code can bring down the whole system. This forces users
+to strike a balance between flexibility of the system and complexity of the
+code. Increasingly, this balance has fallen more on the side of complexity.
 
-Another issue, is the lack of transparency within the verification
-process itself. While a developer can verify their system themselves,
-everyone else using that system simply has to trust that developer. The
-users will unlikely have access to the source code, expertise, or even
-resources to undertake a sufficient verification of that code, and to
-look at the contract on the blockchain is to simply look at a black box.
+\subsection{Isolation}\label{isolation}
+As smart contracts embrace this concept they are growing in size and
+capabilities. Complexity is
+progressively becoming a larger and larger issue. Already today we see many
+smart
+contracts being comprised of tens of different smart contracts operating
+together. These ``smart contract systems'' are also being provided with
+mechanisms to perform upgrades to their code, and the task of wrangling all of
+these issues is
+passed to the developer, with little support from their tools and underlying
+systems, and little oversight from their stakeholders.
+
+Take an example of a smart contract system that contains multiple components.
+One component is tasked with maintaining the list of members of the group, and
+another is
+tasked with maintaining an allocation of tokens. As all of this code operates in
+the same space, there is nothing actively preventing the code which is supposed
+to be maintaining the list of members from modifying the allocation of tokens.
+The only thing preventing this code from reallocating all of the tokens, is that
+the developers and their auditors have correctly written and checked the code
+such that it doesn't.
+
+Developers and auditors are not weaponless in this fight, and rely on a variety
+of tools including DSLs (Domain Specific Languages), static analysis, and formal
+verification to write this code correctly and perform the right checks. These
+are excellent tools to combat these problems, however, they have
+two primary limitations:
+
+\begin{itemize}
+  \item This is a difficult and complicated process. Much like any other complex
+  process, a single mistake can result in a major flaw. If this is the single
+  line of defence (as is common currently in smart contracts) then this flaw
+  will not be caught by any other system.
+  On a regular computer or server, if the code tries to do
+  something too far out of its bounds it will be caught by the operating system.
+  In smart
+  contracts all code can make any change to the system, so an uncaught mistake
+  has limitless consequences.
+  \item These tools are available only to highly trained developers and auditors
+  with the resources (i.e. time) to apply those skills to the code. Other
+  stakeholders in the system are able to gain little or no insight into the
+  code. They simply have to trust the developer.
+\end{itemize}
+
+
+\subsection{Upgrades}\label{upgrades}
+One area where the lack of isolation in smart contracts is most problematic is
+in the upgrading of smart contracts. DSLs, verification, auditing etc. are
+excellent tools to ensure that a smart contract will behave as intended, but
+where they struggle to maintain their effectiveness is during upgrades. Once an
+upgrade occurs, the whole system needs to be re-audited to ensure the same
+constraints still apply.
+With a multi-component smart contract, it is increasingly possible to update one
+or more of these components as the need arises, including for important security
+fixes.
+
+Being able to change the code in a smart contract system is important, as it
+gives us the ability to correct errors. However, it also gives us the ability
+to introduce new ones or
+allow malicious actors to introduce them. In the example above, what was
+once a component to maintain a list of members can now become a component which
+siphons all of the funds held by the contract to an account held by a
+disgruntled developer.
+
+In this example, the smart contract system suffered due to a lack of isolation.
+Perhaps it was a vulnerability in the members list component that was exploited,
+but the damage was far reaching and unrestricted. In traditional computing this
+is a common issue that needs guarding against, and is known as \textbf{privilege
+escalation}. This is also a concern in smart contracts without upgrades, but
+with upgrades the path to privilege escalation becomes easier, and more
+difficult to defend against.
 
 \section{Existing Work}\label{existing-work}
-The design and development of decentralized organizations implemented on
-Ethereum have so far failed to be standardized. Due to the generally
-highly specialized nature of these systems, most existing service
-platforms and protocols developed are highly fragmented, with the design
-of the protocol closely linked to the model of the organization it was
-designed for.
+The Ethereum smart contract blockchain is a concrete VM (virtual machine) which
+is very well defined and standardized. However, Ethereum itself provides no
+platform or protocols on which to base applications which have more complex
+security requirements (which is nearly all smart contract applications). A
+variety of platforms and protocols have been implemented and used which provide
+frameworks for authentication, voting, security checks and various other
+benefits. Many of these have been a success, but they are generally fairly
+specialised and fragmented. Each of these frameworks is built to serve a
+particular use case, and they are closely linked to the model
+of the organization they were designed for. This means that the code for
+providing security is closely intertwined with the application code.
 
-The lack of a standard model for organizations has so far lead to many
+The lack of a standard model for security mechanisms has so far contributed
+to many
 security vulnerabilities. One of the prominent examples was ``The DAO''
 that was built to act as a hedge fund with a built-in proposal protocol
 to manage funds. The implementation was written in a highly specialized
 manner and did not separate the security mechanisms from the business
-logic. This lead to a large attack space and ultimately a re-entrancy
+logic. This lead to a large attack surface and ultimately a re-entrancy
 vulnerability that allowed the attacker to steal funds from the
 organization itself.
 
+\subsection{ZeppelinOS}
 Of the recent projects that are making an impact in this area is the
-ZeppelinOS ZEP protocol by the Zeppelin Team. Users of smart contract
+ZeppelinOS\footnote{https://zeppelinos.org/} ZEP protocol by the Zeppelin Team.
+Users of smart contract
 libraries that use the ZEP protocol are able to vouch or vote for
 upgrades they wish to adopt. Only code that is sufficiently vouched for
 by the users is included in the system, with the developers working on
@@ -188,6 +268,37 @@ verify these systems as we do today - will not be enough to legitimize
 smart contracts as secure financial instruments that the mainstream
 market can trust long-term.
 
+\subsection{AragonOS}
+AragonOS\footnote{https://aragon.org/} is another example of smart contract
+framework that seeks to take a more operating system style approach. Much like
+Beaker, AragonOS features a permission system and a kernel, however, after that
+the design diverges significantly. AragonOS aims to be a featureful platform on
+which to build smart contract applications. While the permission system of
+Beaker is targeted at isolating and limiting \emph{code}, the permission system
+of AragonOS is targeted at a higher level, and is only one component of a vast
+suite of features of the AragonOS platform. We take a different approach in that
+the layer which isolates the various code components should be as separate and
+minimal as possible, and independent of the features built on top of it.
+
+\subsection{Domain Specific Languages}
+There is another branch of activity which has been able to make good progress in
+improving the state of the art, and that is by improving the languages and build
+tools of developers. This includes DSLs, static
+analysis tools, and even some that follow a similar ideal to Beaker and
+incorporate a capability object model directly into the language. These tools
+are a great boon for developers and can dramatically reduce programmer errors.
+However, there is one very large drawback to these systems, which is that they
+are for the benefit of the developer. Once the code is built and running
+on-chain these tools have completed their task and are no longer in use. The
+responsibility is placed squarely on the developers to ensure that these tools
+are used correctly, and that the code that is running on chain accurately
+reflects the steps they took.
+
+However, this still relies on completely trusting developers and that the
+constraints the developers believed they implemented were faithfully executed by
+an off-chain compiler. None of this information is included or verified
+\emph{on-chain}.
+
 To solve this, we propose a more general approach by creating an
 explicit security model for developing smart contracts that allows
 developers the ability to establish semantic restrictions that can
@@ -215,7 +326,7 @@ programmer had relinquished control and the program would execute as
 written.
 
 Driven by a need to manage multiple programs, and eventually include
-restrictions, quotas and permissions, operating systems were created.
+restrictions, quotas, and permissions, operating systems were created.
 With operating systems, the programs weren't just executed blindly by
 the machine. When the machine encountered an instruction that required
 hardware access, it suspended the running program and passed that
@@ -229,45 +340,52 @@ computers. Smart contracts are thoroughly audited and tested, but once
 they are on the blockchain they execute on the raw machine. If we want a
 system where we can interpose ourselves between our components and
 potentially dangerous resources (such as our storage) we need to make
-stronger guarantees about the safety of our system without having to
-apply the same level of verification to every component.
+strong guarantees that components of our system will only abide by the policies
+we set, and won't break the rules.
 
-In order to do so, we need to require that all contracts interact with
-critical resources only through system calls. Once a contract is only
-operating through system calls, the operating system kernel has the
-final say on what the contract can or cannot do.
+In order to do so, we need to require that all contracts interact with critical
+resources only through system calls to our `kernel' that we have placed in
+between the code and the dangerous resources. Once a contract is only operating
+through system calls, the operating system kernel has the final say on what the
+contract can or cannot do.
 
 \subsection{Procedures}\label{procedures}
-A Procedure is a smart contract that can be executed by the kernel.
+A Procedure is a smart contract that can be executed by the kernel. This is the
+smallest independent component or unit of code. As far as the Ethereum VM is
+concerned they are a normal smart contract.
 Unlike normal smart contracts, procedures have several restrictions.
-Critically, procedures are only able to access state changes via system
+Critically, procedures are only able to access state changes (i.e. the dangerous
+things) via system
 calls, and are not able to directly access storage, make outside calls
 or send transactions.
 
 Much like processes are stored in a process table within a traditional
-operating system, procedures are stored within a Procedure Table. Each
-entry contains the id, capability list and address of the procedure.
+operating system, procedures are stored within a Procedure Table held by the
+kernel. Each
+entry contains the id, capability list, and address of the procedure.
 Unlike a process table however, the procedure table does not maintain
 procedure state across separate transaction calls.
 
 \subsection{On-Chain Code
 Verification}\label{on-chain-code-verification}
 In order to verify that a procedure follows certain restrictions we use
-On-Chain Code Verification, or OCCV for short. OCCV is the use of a
+On-Chain Code Verification. On-chain code verification is the use of a
 trusted smart contract to read and verify the code of an untrusted smart
-contract. By reading an untrusted contract before creation (CREATE
-opcode) or after creation (EXTCODECOPY opcode), we can now make
-assertions what it can and cannot do.
+contract. By reading the code of an untrusted contract (via the EXTCODECOPY
+opcode), we can analyse it and make assertions about what it can and cannot do.
 
-With OCCV we can check if an untrusted contract has any opcodes that we
-don't allow. While this can be limited, this allows us to check if a
-contract can potentially: self destruct, make state changes, emit events
-or make an external call. This might not seem much, but the absence of
+With on-chain code verification we can check if an untrusted contract has any
+opcodes that we
+don't allow. In particular this allows us to check if a
+contract can potentially: self destruct, make state changes, emit events,
+or make an external call. This might not seem like a big restriction, but the
+absence of
 such code allows us to make certain guarantees. For example: if the code
 does not contain the combination of SELFDESTRUCT, DELEGATECALL or
 CALLCODE, we now know that this code will never be able to be destroyed.
 
-In our case, the trusted contract will be our kernel, while the
+In our case, the trusted contract (which performs the verification) will be our
+kernel, while the
 untrusted contract would be a procedure. Before running a procedure, the
 kernel can check and verify the procedure, allowing the kernel to
 enforce certain restrictions or access control. The kernel only needs to
@@ -288,17 +406,17 @@ complete control over what that process can and cannot do. These
 requests to the operating system that a process makes are called System
 Calls.
 
-The sequence of EVM opcodes below define a Beaker system call. The input
-and output parameters of the system call are set prior to these
-instructions, and are the responsibility of the designer of the contract
-(presumably with significant assistance from libraries).
-
-
-
+Beaker also uses this system call mechanism, and the sequence of EVM opcodes
+that define a Beaker system call are outlined below. The
+parameters of the system call are set prior to these 3 instructions, and are the
+responsibility of the designer of the contract (presumably with significant
+assistance from libraries).
 
 \definecolor{mygreen}{rgb}{0,0.6,0}
 \begin{minipage}{\linewidth}
-\begin{lstlisting}[language=c,commentstyle=\color{mygreen},basicstyle=\ttfamily,identifierstyle=\color{blue},caption=Sequence of steps to perform a system call.]
+\begin{lstlisting}[language=c,commentstyle=\color{mygreen},basicstyle=\ttfamily,
+  identifierstyle=\color{blue},
+  caption=Sequence of steps to perform a system call.]
 CALLER         // Get Caller
 GAS            // Put all the available gas on the stack
 DELEGATECALL   // Delegate Call to Caller
@@ -313,18 +431,23 @@ that a contract contains no state changing opcodes other than in the
 form of a secure system call.
 
 The delegate call is a call back into the kernel. The kernel will only
-accept system calls from procedures in its procedure table that it is
-currently calling. When a procedure is initially called, it is called
+accept system calls from the procedure it is currently executing, ensuring the
+kernel has a complete understanding and control over what is being executed.
+The very first call the kernel makes (which is usually to the library code) is
+done
 via CALLCODE. This means that that our system, which we will call our
 ``kernel instance'', is the current storage and event space of the
-running code. It also means that the CALLER value, which is a global
+running code. It also means that the CALLER\footnote{One downside of this design
+is that the original sender of the transaction must be included in the payload
+of the transaction if it is needed. As the kernel address is more security
+critical, and is needed more often, it is placed in the CALLER value.} value,
+which is a global
 read-only value, is set to the address of our kernel instance. When our
 procedure does a DELEGATECALL, this address is maintained. As a
 consequence, whenever a kernel is executing a system call, it is able to
 simply check that the CALLER value is equal to its own address (it is
 necessary for this value to be hardcoded into the instance, which is
 performed during instantiation).
-
 
 \begin{figure}[htbp]
 \centering
@@ -333,10 +456,14 @@ performed during instantiation).
 done when a procedure executes a system call}
 \end{figure}
 
+The process for executing a procedure is as follows:
+
+\begin{minipage}{\textwidth}
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
 \item
-  Kernel instance does a CALLCODE (i.e.~a regular library) to the kernel
+  Kernel instance does a CALLCODE\footnotemark (i.e.~a regular
+  library call) to the kernel
   library, executing the function in the kernel library that executes
   procedure.
 \item
@@ -351,16 +478,13 @@ done when a procedure executes a system call}
   After the system call is completed, the kernel library returns to the
   kernel instance, which then returns to the procedure.
 \end{enumerate}
+\end{minipage}
+\footnotetext{The difference between CALLCODE and
+  DELEGATECALL is that CALLCODE resets the CALLER value to whichever contract
+  executed it. We use this to our advantage, as this sets the CALLER value to
+  the kernel instance, allowing us to use it in system calls.}
 
-With this we have a kernel that is generally only accessible from its
-own procedures. It must, however, also accept some form of external
-transaction, this is the only way it can be triggered to execute code.
-As an operating system Beaker should have no say over what kind of
-transactions and programs a system wants to execute. Beaker follows a
-exokernel design, where the kernel itself should stay out of the user's
-code as much as possible.
-
-\subsection{Procedure Creation}\label{procedure-creation}
+\subsection{Procedure Registration}\label{procedure-creation}
 Creating and adding a procedure to the kernel's procedure table (so that it can
 be executed) involves two steps. The first is to create and deploy the procedure
 as you would any other smart contract. Once it is deployed, it can then be
@@ -389,23 +513,34 @@ included in the procedure table.}
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
 \item
-  First, the contract is parsed and verified to not contain any illegal
-  instructions. If any illegal opcodes are found, it is rejected.
+  First, the contract is built and deployed as usual.
+\item
+  Second, the address of the contract is passed to the kernel for registration.
+  The kernel parses the code of this contract and verifies it does not contain
+  any illegal opcodes. If any illegal opcodes are found, the contract is
+  rejected.
 \item
   To designate a syscall dispatch, the code must include a valid syscall
   entry. To allow the kernel ownership, it checks if the contract has an
   additional header that prevents unauthorized calls to the contract.
 \item
-  When all the requested syscalls are injected, the contract is now a
-  protected procedure and is ready to be deployed as a contract.
+  Once the code as been verified it is added to the kernel's procedure table,
+  and can then be assigned capabilities.
 \item
-  Once deployed, the procedure is added to the procedure table and
-  assigned a list of designated capabilities.
+  The procedure can then be used.
 \end{enumerate}
 
 \subsection{Entry Procedure}\label{entry-procedure}
-We have established that a Beaker kernel instance has to accept two
-types of transactions:
+We have now outlined a kernel that is generally only accessible from its
+own procedures. It must, however, also accept some form of external
+transaction, which is the only way it can be triggered to execute code.
+As an operating system Beaker should have no say over what kind of
+transactions and programs a system wants to execute, and should not impose any
+format on those transactions. Beaker follows an
+exokernel design, where the kernel itself should stay out of the user's
+code as much as possible.
+
+We can divide the calls that a Beaker kernel has to accept into two categories:
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
@@ -418,19 +553,20 @@ types of transactions:
   implement.
 \end{enumerate}
 
-We have covered above how system calls are secured by ensuring that the
-kernel only accepts system calls from procedures it is currently
-calling. To handle external calls however, we must also establish a way
-to handle external transactions.
+We have covered above how system calls are secured by ensuring that the kernel
+only accepts system calls from procedures it is currently calling. To allow the
+system to interact with users, we must also establish a way to handle external
+transactions.
 
-In order to define an external interface to the kernel, we have a
-procedure which is designated as the Entry Procedure. This entry
+In order to define an external interface to the kernel, we designate a
+procedure of our choice as the Entry Procedure. This entry
 procedure is created (and updated if need be) by the user, and is
 executed as a normal procedure. When the kernel instance receives an
 external transaction from another Ethereum address, it simply forwards
 the message data to the entry procedure. Thus whenever any transaction
 reaches the kernel, it is up to our entry procedure to decide what
-should happen and act as the interface to the kernel.
+should happen and act as the interface to the kernel. This would look something
+like this:
 
 \begin{figure}[htbp]
 \centering
@@ -450,7 +586,7 @@ for executing an entry procedure.}
   The Kernel looks up the entry procedure in the procedure table, and
   dispatches it.
 \item
-  The entry procedure reads the payload And performs whatever user
+  The entry procedure reads the payload and performs whatever user
   authentication logic the developer of the system desires.
 \item
   If the payload is valid, the entry procedure looks up procedure X and
@@ -461,7 +597,7 @@ for executing an entry procedure.}
 
 \subsection{Auditability and the Principle of Least
 Privilege}\label{auditability-and-the-principle-of-least-privilege}
-Existing systems such as DSLs (Domain-Specific Languages) or libraries
+Existing systems such as DSLs or libraries
 offer some level of verification and guarantees. Before the smart
 contracts are deployed, the developer is able to use these tools to
 verify the contracts. However, once these contracts are deployed they
@@ -472,7 +608,7 @@ available to the developer.
 By using an operating system model, Beaker is able to enforce isolation
 at runtime. The information on the isolation of the system is contained
 within the kernel and can be audited quite simply be anyone looking at
-the system. This allows us to no only isolate the highest risk portion
+the system. This allows us to not only isolate the highest risk portion
 of our code and reduce our attack surface, but also to verifiably
 demonstrate that to others. To an outside auditor, many chunks of a
 Beaker system will also be opaque black boxes. The difference is, this
@@ -508,7 +644,7 @@ library or module and say ``my program sends packets over the network,
 and must have permission to do so, but this section of code coming from
 this library should not be able to''. This is the state of Ethereum
 security currently. Everything is built as a single program, without
-internal security boundaries available. (the new STATICCALL opcode is an
+internal security boundaries available (the new STATICCALL opcode is an
 attempt to implement this).
 
 However, now that we have established an operating system with system
@@ -560,7 +696,7 @@ These two factors are informed by the design already:
 Amongst complex smart contract systems the exact requirements differ
 significantly, but the base requirements stay the same. The key goal is
 to improve the security and auditability of the system such that an
-external party or higher level ``system designer'' might require control
+external party or higher level ``system designer'' can be given control
 over what the various contracts in the system can do. This would allow
 them to compartmentalise areas of code and ensure that it only has the
 privileges it requires, allowing them to focus attention on more
