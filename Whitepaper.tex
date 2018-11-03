@@ -65,9 +65,9 @@ contracts}\label{beaker-a-security-protocol-and-framework-for-smart-contracts}
 \begin{abstract}\label{abstract}
 
 We describe a secure and extensible operating system for smart contracts. Using
-a capability-based exokernel protocol, we can facilitate secure isolation of
-smart contract components, improve the smart contract upgrade process and
-prevent privilege escalation. The protocol is intended to serve as an open
+a capability-based exokernel protocol, we can facilitate secure isolation,
+perform upgrades in a secure and robust manner, and prevent privilege escalation 
+at any point in the development process. The protocol is intended to serve as an open
 standard and building block upon which more advanced and tailored security
 models can be built.
 
@@ -117,8 +117,7 @@ environment. The Beaker kernel provides the building blocks and
 primitives that organizations need to build more nuanced security and governance
 models to suit their use case. Most critically, by using the primitives
 Beaker provides, designers of these systems will then be able to
-demonstrate these security guarantees to others without requiring such a high
-level of manual-code verification.
+demonstrate these security guarantees to others without requiring manual-code verification.
 
 \section{Problems}\label{problems}
 Smart contracts are, by their nature, unforgiving machines that follow the their
@@ -189,8 +188,8 @@ two primary limitations:
 One area where the lack of isolation in smart contracts is most problematic is
 in the upgrading of smart contracts. DSLs, verification, auditing etc. are
 excellent tools to ensure that a smart contract will behave as intended, but
-they struggle to maintain their effectiveness is during upgrades. Once an
-upgrade occurs, the whole system needs to be reaudited ensure the same
+where they struggle to maintain their effectiveness is during upgrades. Once an
+upgrade occurs, the whole system needs to be re-audited to ensure the same
 constraints still apply.
 With a multi-component smart contract, it is increasingly possible to update one
 or more of these components as the need arises, including for important security
@@ -199,7 +198,7 @@ fixes.
 Being able to change the code in a smart contract system is important, as it
 gives us the ability to correct errors. However, it also gives us the ability
 to introduce new ones or
-allow malicious actors to introduce new ones. In the example above, what was
+allow malicious actors to introduce them. In the example above, what was
 once a component to maintain a list of members can now become a component which
 siphons all of the funds held by the contract to an account held by a
 disgruntled developer.
@@ -235,6 +234,7 @@ logic. This lead to a large attack surface and ultimately a re-entrancy
 vulnerability that allowed the attacker to steal funds from the
 organization itself.
 
+\subsection{ZeppelinOS}
 Of the recent projects that are making an impact in this area is the
 ZeppelinOS\footnote{https://zeppelinos.org/} ZEP protocol by the Zeppelin Team.
 Users of smart contract
@@ -267,6 +267,7 @@ verify these systems as we do today - will not be enough to legitimize
 smart contracts as secure financial instruments that the mainstream
 market can trust long-term.
 
+\subsection{AragonOS}
 AragonOS\footnote{https://aragon.org/} is another example of smart contract
 framework that seeks to take a more operating system style approach. Much like
 Beaker, AragonOS features a permission system and a kernel, however, after that
@@ -278,6 +279,7 @@ suite of features of the AragonOS platform. We take a different approach in that
 the layer which isolates the various code components should be as separate and
 minimal as possible, and independent of the features built on top of it.
 
+\subsection{Domain Specific Languages}
 There is another branch of activity which has been able to make good progress in
 improving the state of the art, and that is by improving the languages and build
 tools of developers. This includes DSLs, static
@@ -527,14 +529,14 @@ included in the procedure table.}
 \subsection{Entry Procedure}\label{entry-procedure}
 We have now outlined a kernel that is generally only accessible from its
 own procedures. It must, however, also accept some form of external
-transaction, this is the only way it can be triggered to execute code.
+transaction, which is the only way it can be triggered to execute code.
 As an operating system Beaker should have no say over what kind of
 transactions and programs a system wants to execute, and should not impose any
-format on those transactions. Beaker follows a
+format on those transactions. Beaker follows an
 exokernel design, where the kernel itself should stay out of the user's
 code as much as possible.
 
-We an divide the calls that a Beaker kernel has to accept into two categories:
+We can divide the calls that a Beaker kernel has to accept into two categories:
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
