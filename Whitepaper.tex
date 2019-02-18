@@ -5,7 +5,6 @@
 \usepackage{ifxetex,ifluatex}
 \usepackage{fixltx2e} % provides \textsubscript
 \usepackage[T1]{fontenc}
-\usepackage{natbib}
 \usepackage[utf8]{inputenc}
 % use upquote if available, for straight quotes in verbatim environments
 \IfFileExists{upquote.sty}{\usepackage{upquote}}{}
@@ -15,44 +14,25 @@
 \usepackage[usenames,dvipsnames]{color}
 \hypersetup{breaklinks=true,
             bookmarks=true,
-            pdfauthor={},
-            pdftitle={},
+            pdfauthor={Jacob Payne, Jake O'Shannessy, and Alexey Troitskiy},
+            pdftitle={Beaker: A security protocol and framework for smart contracts},
             colorlinks=true,
             citecolor=blue,
             urlcolor=blue,
+            pdfkeywords={exokernel, OS, Operating System, security protocol,
+                permission system, smart contract platform, stored
+                procedure, Ethereum, semantic restriction, blockchain, virtual machine,
+                decentralised organisation, data access, open source, introspection,
+				system call, isolation, procedure},
             %linkcolor=magenta,
-            pdfborder={0 0 0}}
+            pdfborder={0 0 0.5 [1 3]}},
+			pagebackref=true
 \urlstyle{same}  % don't use monospace font for urls
 \usepackage{color}
 \usepackage{listings}
 
 \usepackage{longtable,booktabs}
 \usepackage{graphicx,grffile}
-% \usepackage[bookmarks=true, unicode=true, pdftitle={Beaker: A security
-% protocol and framework for smart contracts}, pdfauthor={Jacob Payne \and Jake
-% O'Shannessy \and Alexey Troitskiy},pdfkeywords={exokernel, OS, Operating
-% System, security protocol, permission system, smart contract platform, stored
-% procedure, Ethereum, semantic restriction, blockchain, virtual machine,
-% decentralised organisation, data access, open source, introspection,
-% system call, isolation, procedure},pdfborder={0 0 0.5 [1 3]
-% },pagebackref=true]{hyperref}
-
-% %This should be the last package before \input{Version.tex}
-% \PassOptionsToPackage{hyphens}{url}\usepackage{hyperref}
-% % "hyperref loads the url package internally. Use \PassOptionsToPackage
-% {hyphens}{url}\usepackage{hyperref} to pass the option to the url package
-% when it is loaded by hyperref. This avoids any package option clashes."
-% Source: <https://tex.stackexchange.com/questions/3033/
-% forcing-linebreaks-in-url/3034#comment44478_3034>.
-% Note also this: "If the \PassOptionsToPackage{hyphens}{url} approach does
-% not work, maybe it's "because you're trying to load the url package with a
-% specific option, but it's being loaded by one of your packages before that
-% with a different set of options. Try loading the url package earlier than
-% the package that requires it. If it's loaded by the document class, try
-% using \RequirePackage[hyphens]{url} before the document class." Source:
-% <https://tex.stackexchange.com/questions/3033/forcing-linebreaks-in-url/3034#comment555944_3034>.
-% For more information on using the hyperref package, refer to e.g.
-% https://en.wikibooks.org/w/index.php?title=LaTeX/Hyperlinks&stable=0#Hyperlink_and_Hypertarget.
 
 \makeatletter
 \def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
@@ -938,8 +918,5 @@ the system to others in a transparent manner.
 We would like to express our gratitude to other projects notably our
 mentors and advisors, and the many welcoming people in the Ethereum
 community.
-
-\bibliographystyle{plainnat}
-\bibliography{Biblio}
 
 \end{document}
