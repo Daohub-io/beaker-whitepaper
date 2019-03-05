@@ -6,7 +6,10 @@ IMGS = media/BeakerKernelOverview.pdf media/NormalKernelOverview.pdf \
 
 .PHONY: all clean
 
-all : Whitepaper.pdf
+all : Whitepaper.pdf BeakerSpec.pdf
+
+BeakerSpec.pdf : BeakerSpec.tex $(IMGS)
+	$(TEX) BeakerSpec.tex
 
 Whitepaper.pdf : Whitepaper.tex $(IMGS)
 	$(TEX) Whitepaper.tex
