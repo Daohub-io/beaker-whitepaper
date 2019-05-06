@@ -5,6 +5,7 @@
 \usepackage{ifxetex,ifluatex}
 \usepackage{fixltx2e} % provides \textsubscript
 \usepackage[T1]{fontenc}
+\usepackage{natbib}
 \usepackage[utf8]{inputenc}
 % use upquote if available, for straight quotes in verbatim environments
 \IfFileExists{upquote.sty}{\usepackage{upquote}}{}
@@ -27,6 +28,32 @@
 
 \usepackage{longtable,booktabs}
 \usepackage{graphicx,grffile}
+% \usepackage[bookmarks=true, unicode=true, pdftitle={Cap9: A security
+% protocol and framework for smart contracts}, pdfauthor={Jacob Payne \and Jake
+% O'Shannessy \and Alexey Troitskiy},pdfkeywords={exokernel, OS, Operating
+% System, security protocol, permission system, smart contract platform, stored
+% procedure, Ethereum, semantic restriction, blockchain, virtual machine,
+% decentralised organisation, data access, open source, introspection,
+% system call, isolation, procedure},pdfborder={0 0 0.5 [1 3]
+% },pagebackref=true]{hyperref}
+
+% %This should be the last package before \input{Version.tex}
+% \PassOptionsToPackage{hyphens}{url}\usepackage{hyperref}
+% % "hyperref loads the url package internally. Use \PassOptionsToPackage
+% {hyphens}{url}\usepackage{hyperref} to pass the option to the url package
+% when it is loaded by hyperref. This avoids any package option clashes."
+% Source: <https://tex.stackexchange.com/questions/3033/
+% forcing-linebreaks-in-url/3034#comment44478_3034>.
+% Note also this: "If the \PassOptionsToPackage{hyphens}{url} approach does
+% not work, maybe it's "because you're trying to load the url package with a
+% specific option, but it's being loaded by one of your packages before that
+% with a different set of options. Try loading the url package earlier than
+% the package that requires it. If it's loaded by the document class, try
+% using \RequirePackage[hyphens]{url} before the document class." Source:
+% <https://tex.stackexchange.com/questions/3033/forcing-linebreaks-in-url/3034#comment555944_3034>.
+% For more information on using the hyperref package, refer to e.g.
+% https://en.wikibooks.org/w/index.php?title=LaTeX/Hyperlinks&stable=0#Hyperlink_and_Hypertarget.
+
 \makeatletter
 \def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
 \def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
@@ -53,8 +80,8 @@
 \setcounter{secnumdepth}{3}
 \setcounter{tocdepth}{3}
 
-\title{Beaker: A security protocol and framework for smart
-contracts}\label{beaker-a-security-protocol-and-framework-for-smart-contracts}
+\title{Cap9: A security protocol and framework for smart
+contracts}\label{cap9-a-security-protocol-and-framework-for-smart-contracts}
 
 \author{Jacob Payne \and Jake O'Shannessy \and Alexey Troitskiy}
 
@@ -92,35 +119,39 @@ party.
 
 While this unlocks a huge potential, the development and deployment of such
 organizations
-has a high barrier of entry. Smart contract development practices and
+has a high barrier of entry. Smart contract\footnote{
+  A more appropriate, accurate name for smart contracts may be stored
+  procedures (\href{https://twitter.com/VladZamfir/status/1051162300437020673}{as proposed by Vlad Zamfir} and used in database terminology).
+  Smart contracts have also been critiqued by \citet{ASICSmithMJS}.
+} development practices and
 tooling are still in their prenatal stages of maturity, with zero margin
 for error. Additionally, organizations must be extensible upfront to
 allow changes and upgrades to their systems while still maintain high
 standards of safety.
 
-Beaker is a minimal open-source exokernel\footnote{An exokernel exposes as much
+Cap9 is a minimal open-source exokernel\footnote{An exokernel exposes as much
 of the underlying hardware the system as possible, without larger abstractions
-such as filesystems. In Beaker we expose all the underlying mechanisms (such as
+such as filesystems. In Cap9 we expose all the underlying mechanisms (such as
 storage) directly to the contract, with only the permissions layer in-between.}
 protocol that serves as a building block for establishing secure and scalable
-organizations. Beaker enables organizations that will grow in complexity and
+organizations. Cap9 enables organizations that will grow in complexity and
 will require long term extensibility.
 
-Using Beaker, users can establish an organization on the blockchain with
+Using Cap9, users can establish an organization on the blockchain with
 a much higher level of confidence in its stability and security. The
-safety model Beaker provides not only reduces risk, but allows
+safety model Cap9 provides not only reduces risk, but allows
 organizations to be designed in a much more flexible and robust manner.
 
-The exokernel model of Beaker allows organizations to freely define
+The exokernel model of Cap9 allows organizations to freely define
 their own systems and procedures, but within a safe and controlled
-environment. The Beaker kernel provides the building blocks and
+environment. The Cap9 kernel provides the building blocks and
 primitives that organizations need to build more nuanced security and governance
 models to suit their use case. Most critically, by using the primitives
-Beaker provides, designers of these systems will then be able to
+Cap9 provides, designers of these systems will then be able to
 demonstrate these security guarantees to others without requiring manual-code verification.
 
 \section{Problems}\label{problems}
-Smart contracts are, by their nature, unforgiving machines that follow the their
+Smart contracts are, by their nature, unforgiving machines that follow their
 specification to the letter. This is one of the main benefits of smart
 contracts, but it can also be their downfall, as the machine will faithfully
 execute any flaw or mistake in that code. This is a well known property of smart
@@ -187,7 +218,7 @@ two primary limitations:
 
 \subsection{Upgrades}\label{upgrades}
 One area where the lack of isolation in smart contracts is most problematic is
-in the upgrading of smart contracts. DSLs, verification, auditing etc. are
+in the upgrading of smart contracts. DSLs, verification, auditing, etc., are
 excellent tools to ensure that a smart contract will behave as intended, but
 where they struggle to maintain their effectiveness is during upgrades. Once an
 upgrade occurs, the whole system needs to be re-audited to ensure the same
@@ -237,7 +268,7 @@ organization itself.
 
 \subsection{ZeppelinOS}
 Of the recent projects that are making an impact in this area is the
-ZeppelinOS\footnote{https://zeppelinos.org/} ZEP protocol by the Zeppelin Team.
+ZeppelinOS\footnote{\url{https://zeppelinos.org/}} ZEP protocol by the Zeppelin Team.
 Users of smart contract
 libraries that use the ZEP protocol are able to vouch or vote for
 upgrades they wish to adopt. Only code that is sufficiently vouched for
@@ -269,12 +300,12 @@ smart contracts as secure financial instruments that the mainstream
 market can trust long-term.
 
 \subsection{AragonOS}
-AragonOS\footnote{https://aragon.org/} is another example of smart contract
+AragonOS\footnote{\url{https://aragon.org/}} is another example of smart contract
 framework that seeks to take a more operating system style approach. Much like
-Beaker, AragonOS features a permission system and a kernel, however, after that
+Cap9, AragonOS features a permission system and a kernel, however, after that
 the design diverges significantly. AragonOS aims to be a featureful platform on
 which to build smart contract applications. While the permission system of
-Beaker is targeted at isolating and limiting \emph{code}, the permission system
+Cap9 is targeted at isolating and limiting \emph{code}, the permission system
 of AragonOS is targeted at a higher level, and is only one component of a vast
 suite of features of the AragonOS platform. We take a different approach in that
 the layer which isolates the various code components should be as separate and
@@ -284,7 +315,7 @@ minimal as possible, and independent of the features built on top of it.
 There is another branch of activity which has been able to make good progress in
 improving the state of the art, and that is by improving the languages and build
 tools of developers. This includes DSLs, static
-analysis tools, and even some that follow a similar ideal to Beaker and
+analysis tools, and even some that follow a similar ideal to Cap9 and
 incorporate a capability object model directly into the language. These tools
 are a great boon for developers and can dramatically reduce programmer errors.
 However, there is one very large drawback to these systems, which is that they
@@ -309,11 +340,11 @@ relying on 3rd party trust.
 
 \section{Overview}\label{overview}
 \begin{figure}[H]
-    \includegraphics[width=0.49\textwidth]{media/NormalKernelOverview.pdf}
-    \includegraphics[width=0.49\textwidth]{media/BeakerKernelOverview.pdf}
+    \includegraphics[width=0.49\textwidth]{media/NormalKernelOverview}
+    \includegraphics[width=0.49\textwidth]{media/Cap9KernelOverview}
 
     \caption{Similar to how existing operating systems act as an
-    interface to hardware for applications on a computer, the Beaker kernel
+    interface to hardware for applications on a computer, the Cap9 kernel
     provides an interface for smart contracts to securely access privileged
     assets and data of an organization.\label{fig:kernels}}
 \end{figure}
@@ -406,8 +437,8 @@ complete control over what that process can and cannot do. These
 requests to the operating system that a process makes are called System
 Calls.
 
-Beaker also uses this system call mechanism, and the sequence of EVM opcodes
-that define a Beaker system call are outlined below. The
+Cap9 also uses this system call mechanism, and the sequence of EVM opcodes
+that define a Cap9 system call are outlined below. The
 parameters of the system call are set prior to these 3 instructions, and are the
 responsibility of the designer of the contract (presumably with significant
 assistance from libraries).
@@ -437,12 +468,13 @@ The very first call the kernel makes (which is usually to the library code) is
 done
 via CALLCODE. This means that that our system, which we will call our
 ``kernel instance'', is the current storage and event space of the
-running code. It also means that the CALLER\footnote{One downside of this design
+running code. It also means that the CALLER value,
+which is a global
+read-only value, is set to the address of our kernel instance.
+\footnote{One downside of this design
 is that the original sender of the transaction must be included in the payload
 of the transaction if it is needed. As the kernel address is more security
-critical, and is needed more often, it is placed in the CALLER value.} value,
-which is a global
-read-only value, is set to the address of our kernel instance. When our
+critical, and is needed more often, it is placed in the CALLER value.} When our
 procedure does a DELEGATECALL, this address is maintained. As a
 consequence, whenever a kernel is executing a system call, it is able to
 simply check that the CALLER value is equal to its own address (it is
@@ -534,13 +566,13 @@ included in the procedure table.}
 We have now outlined a kernel that is generally only accessible from its
 own procedures. It must, however, also accept some form of external
 transaction, which is the only way it can be triggered to execute code.
-As an operating system Beaker should have no say over what kind of
+As an operating system Cap9 should have no say over what kind of
 transactions and programs a system wants to execute, and should not impose any
-format on those transactions. Beaker follows an
+format on those transactions. Cap9 follows an
 exokernel design, where the kernel itself should stay out of the user's
 code as much as possible.
 
-We can divide the calls that a Beaker kernel has to accept into two categories:
+We can divide the calls that a Cap9 kernel has to accept into two categories:
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
@@ -605,13 +637,13 @@ contain no information that can be used to readily verify the system.
 They have become opaque, and the verification information is only
 available to the developer.
 
-By using an operating system model, Beaker is able to enforce isolation
+By using an operating system model, Cap9 is able to enforce isolation
 at runtime. The information on the isolation of the system is contained
-within the kernel and can be audited quite simply be anyone looking at
+within the kernel and can be audited quite simply by anyone looking at
 the system. This allows us to not only isolate the highest risk portion
 of our code and reduce our attack surface, but also to verifiably
 demonstrate that to others. To an outside auditor, many chunks of a
-Beaker system will also be opaque black boxes. The difference is, this
+Cap9 system will also be opaque black boxes. The difference is, this
 auditor will be able to see which permissions are applied to which black
 box. In other words the system becomes a collection of isolated and
 restricted black boxes.
@@ -620,7 +652,7 @@ Just as when running Linux or any other regular system, it is of course
 possible to run all code with full permissions (i.e.~root). All of the
 system code can be included in a single procedure with full capabilities
 and the system will become as secure as a regular smart contract. But by
-applying isolation, Beaker allows developers to separate their system
+applying isolation, Cap9 allows developers to separate their system
 into specialised components. These components that can then implement
 large amounts of logic without the risk of accidentally (or maliciously)
 executing some of the more dangerous functions of the system.
@@ -629,7 +661,7 @@ In order to do this, we need a security model to apply to procedures and
 system calls.
 
 \section{Security Model}\label{security-model}
-We established two critical components of the Beaker exokernel:
+We established two critical components of the Cap9 exokernel:
 introspection via system calls, and isolation via procedures to achieve
 the principle of least privilege.
 
@@ -652,7 +684,7 @@ calls, we now have that point of control over the contracts running on
 our system, and we can craft policies to allow or deny any action that
 interacts with the rest of the system.
 
-To implement these policies, Beaker uses a capability-based
+To implement these policies, Cap9 uses a capability-based
 access-control model. Access control governs all procedures; in order to
 perform a system call a procedure must possess an unforgeable token or
 key called a Capability. This capability identifies the particular
@@ -688,7 +720,7 @@ These two factors are informed by the design already:
   this allows more complex policy mechanisms to be practical, as any
   system deployed as smart contracts must already be heavily audited.
 \item
-  Beaker follows a microkernel approach so as to give as much freedom to
+  Cap9 follows a microkernel approach so as to give as much freedom to
   the designer as possible. For this reason it is necessary to make as
   few assumptions about the use case of users as possible.
 \end{enumerate}
@@ -726,7 +758,7 @@ enforce this policy.
 
 \subsection{Implementing a Capability Based Security
 Model}\label{implementing-a-capability-based-security-model}
-All policies in Beaker are applied directly to procedures. Beaker is a
+All policies in Cap9 are applied directly to procedures. Cap9 is a
 capability-based OS and therefore the policies take the form of a
 Capability List. Each capability in this list is an unforgeable key.
 This key is both an identifier for a resource, and an inherent
@@ -745,12 +777,12 @@ attempt to deal at all with ``users''. If a particular system includes
 users (which is to be expected) it is left to the creators of that
 system to dictate how that is organised and implemented.
 
-For this reason, Beaker aims to help system designers implement their
+For this reason, Cap9 aims to help system designers implement their
 own higher level permissions systems on solid primitives, rather than to
-anticipate all the use cases for those using Beaker.
+anticipate all the use cases for those using Cap9.
 
 Presented here is an outline of what a simplistic capability system
-might look like in Beaker. A procedure is created in two steps:
+might look like in Cap9. A procedure is created in two steps:
 
 \begin{itemize}
 \item
@@ -772,7 +804,7 @@ designed are left to the users.
 The advantage of this design, where capabilities are assigned to
 procedures, is that it is simple and enforceable. Compared to some other
 capability system designs this does have a few limitations. One
-limitation it does not support dynamically chosen capabilities. For
+limitation is that it does not support dynamically chosen capabilities. For
 example this means that it is not possible to pass a capability of a
 particular storage location to a procedure. This is an often touted
 feature of capability systems that allows for the delegation of
@@ -782,7 +814,7 @@ the capabilities more static and auditable.
 \subsection{Custom User Permissions}\label{custom-user-permissions}
 A capability-based security model allows the flexibility to define a
 procedure that can act as a custom permission system akin to an access
-control list. With a custom permission system, users are free do define
+control list. With a custom permission system, users are free to define
 their own hierarchies or groups in order to satisfy their particular
 requirements. Thus users are not forced to follow a specific permission
 model that does not fit their needs and still maintain safety through
@@ -801,7 +833,7 @@ within its allowed capabilities. Such a procedure can act as an
 administration system to maintain and upgrade previously defined
 components within the organization by secure vote.
 
-Another example can involve groups. Where group is assigned control over
+Another example can involve groups, where a group is assigned control over
 a procedure with designated capabilities that define how the group can
 affect the organization. This in effect can be used as an explicit
 safeguard where each group cannot compromise the other's resources.
@@ -872,7 +904,7 @@ The Storage object is defined by a 32 byte storage location where a
 procedure can either read or write a 32 byte value. In order to provide
 the kernel a protected storage space, storage is divided into two
 spaces, with half of locations assigned to kernel-space and and the
-other half assigned to user-space storage. This provides all procedure a
+other half assigned to user-space storage. This provides all procedures a
 user-space of $2^{255}$ unique keys. The number of storage keys far outweighs
 the capacity of the storage system itself, so will not be a limiting
 factor long term.
@@ -880,9 +912,9 @@ factor long term.
 \subsubsection{Events}\label{events}
 Events are crucial for signalling verified changes to the outside world,
 accessing data asynchronously, as well as their use in establishing
-off-chain networks. In Ethereum, logs can be ascribed from 0-4 topics,
+off-chain networks. In Ethereum, logs can be ascribed from 0–4 topics,
 with each topic being a 32-byte value. These topics are handled as
-addresses or namespaces. In order to log to specific topic, the
+addresses or namespaces. In order to log to a specific topic, the
 procedure must have the capability to do so. This capability is the
 write capability included under the Log object in the table kernel
 object table above. This capability type is then refined to dictate
@@ -895,11 +927,11 @@ to spend during execution as well as how much gas it is allowed to send
 to an external address.
 
 \section{Summary}\label{summary}
-The Beaker exokernel protocol provides a secure environment for
+The Cap9 exokernel protocol provides a secure environment for
 organizations to establish extendible business logic through restricted
 smart contracts defined as procedures.
 
-By using a low level capability-based security model, Beaker allows
+By using a low level capability-based security model, Cap9 allows
 developers to design custom permissions and policies that suit their use
 case, rather than lock organizations into a particular governance model.
 These will also form a standard set of primitives that can be used to
@@ -910,5 +942,8 @@ the system to others in a transparent manner.
 We would like to express our gratitude to other projects notably our
 mentors and advisors, and the many welcoming people in the Ethereum
 community.
+
+\bibliographystyle{plainnat}
+\bibliography{Biblio}
 
 \end{document}
